@@ -1,5 +1,3 @@
-.PHONY: all exec test clean distclean mostlyclean package install uninstall distclean-exec mostlyclean-exec clean-exec clean-install install-dir distclean-install mostlyclean-install
-
 ifndef ROOTDIR
 ROOTDIR := $(CURDIR)
 export ROOTDIR
@@ -7,54 +5,29 @@ endif
 
 include $(ROOTDIR)/mk/variables.mk
 
-INSTALLDIR := $(ROOTDIR)/gen/install
+.PHONY: all
+all: firmware test
 
-all: exec
-
+.PHONY: test
 test:
 	$(MAKE) -C $(ROOTDIR)/src test
 
-exec:
-	$(MAKE) -C $(ROOTDIR)/src exec
+.PHONY: firmware
+firmware:
+	$(MAKE) -C $(ROOTDIR)/src firmware
 
-install-dir: clean-install
-	$(MKDIR) -p $(INSTALLDIR)
-	$(MAKE) -C $(CURDIR) DESTDIR=$(INSTALLDIR) install
-
-package: install-dir
-	cd $(INSTALLDIR) && $(TAR) czf $(ROOTDIR)/gen/$(PKGNAME)-$(VERSION)-$(TARGET_ARCH_TYPE).tar.gz *
-
-install: images exec
-	$(INSTALL) -D -m 755 -t $(DESTDIR)$(bindir)/ $(ROOTDIR)/gen/exec/$(TARGET_ARCH_TYPE)/$(PKGNAME)
-	$(INSTALL) -d $(DESTDIR)$(datadir)/$(PKGNAME)
-	$(CHMOD) -R a+Xr,g-w,o-w $(DESTDIR)$(datadir)/$(PKGNAME)
-
-uninstall:
-	$(RM) $(DESTDIR)$(bindir)/$(PKGNAME)
-	$(RM) -r $(DESTDIR)$(datadir)/$(PKGNAME)
-
-clean: clean-exec clean-install
-
-distclean: distclean-exec distclean-install
-	$(RM) -r $(ROOTDIR)/gen
-
-mostlyclean: mostlyclean-exec mostlyclean-install
-
-clean-exec:
+.PHONY: clean
+clean:
 	$(MAKE) -C $(ROOTDIR)/src clean
 
-mostlyclean-exec:
+.PHONY: mostlyclean
+mostlyclean:
 	$(MAKE) -C $(ROOTDIR)/src mostlyclean
 
-distclean-exec:
+.PHONY: distclean
+distclean:
 	$(MAKE) -C $(ROOTDIR)/src distclean
-
-clean-install: distclean-install
-
-mostlyclean-install: distclean-install
-
-distclean-install:
-	$(RM) -r $(INSTALLDIR)
+	$(RM) -r $(ROOTDIR)/gen
 
 .DEFAULT:
 	$(MAKE) -C $(ROOTDIR)/src $(MAKECMDGOALS)

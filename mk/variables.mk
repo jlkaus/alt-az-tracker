@@ -5,24 +5,35 @@ ROOTDIR := $(CURDIR)
 export ROOTDIR
 endif
 
-ifndef TARGET_ARCH_TYPE
-TARGET_ARCH_TYPE := xyz
-export TARGET_ARCH_TYPE
+ifndef TARGET_AVR_FREQ
+TARGET_AVR_FREQ := 20000000L
+export TARGET_AVR_FREQ
 endif
+ifndef TARGET_AVR
+TARGET_AVR := atmega644p
+export TARGET_AVR
+endif
+
 ifndef VERSION
 VERSION := $(shell cat $(ROOTDIR)/VERSION)
 export VERSION
 endif
 
-TAR = tar
-MKDIR = mkdir
-INSTALL = install
-WGET=wget
-WGET_OPT= --quiet --compression=auto
-CONVERT=convert
-FIND=find
-CP=cp
-CHMOD=chmod
+
+CC = /usr/bin/avr-gcc
+CXX = /usr/bin/avr-g++
+OBJCOPY = /usr/bin/avr-objcopy
+OBJDUMP = /usr/bin/avr-objdump
+TAR = /usr/bin/tar
+MKDIR = /usr/bin/mkdir
+INSTALL = /usr/bin/install
+WGET = /usr/bin/wget
+WGET_OPT = --quiet --compression=auto
+CONVERT = /usr/bin/convert
+FIND = /usr/bin/find
+CP = /usr/bin/cp
+CHMOD = /usr/bin/chmod
+RM = /usr/bin/rm
 
 DESTDIR =
 prefix = /usr/local
@@ -58,7 +69,7 @@ DEFAULT_LONGITUDE ?= "-90.490470"
 
 $(warning PKGNAME=$(PKGNAME))
 $(warning VERSION=$(VERSION))
-$(warning TARGET_ARCH_TYPE=$(TARGET_ARCH_TYPE))
-
+$(warning TARGET_AVR=$(TARGET_AVR))
+$(warning TARGET_AVR_FREQ=$(TARGET_AVR_FREQ))
 $(warning DESTDIR=$(DESTDIR))
 $(warning prefix=$(prefix))

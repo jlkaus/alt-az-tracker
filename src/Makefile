@@ -1,48 +1,60 @@
-ifneq (exec,$(notdir $(patsubst %/,%,$(dir $(CURDIR)))))
+ifneq (firmware,$(notdir $(patsubst %/,%,$(dir $(CURDIR)))))
 include $(CURDIR)/../mk/target.mk
 else
-.PHONY: exec test 
 
 include $(ROOTDIR)/mk/variables.mk
+include $(ROOTDIR)/mk/rules.mk
 
 INCDIR := $(ROOTDIR)/include
+LIBDIR := .
 
 $(warning ROOTDIR=$(ROOTDIR))
 $(warning CURDIR=$(CURDIR))
 $(warning SRCDIR=$(SRCDIR))
 $(warning OBJDIR=$(OBJDIR))
 $(warning INCDIR=$(INCDIR))
+$(warning LIBDIR=$(LIBDIR))
 $(warning MAKECMDGOALS=$(MAKECMDGOALS))
 
 VPATH = $(SRCDIR)
 
-CXXDEFS = -DDEFAULT_LONGITUDE=$(DEFAULT_LONGITUDE) -DDEFAULT_LATITUDE=$(DEFAULT_LATITUDE) -DVERSION=$(VERSION) -DPKGNAME=$(PKGNAME) -DARCH=$(TARGET_ARCH_TYPE)
-CXXFLAGS = -std=gnu++11 -I$(INCDIR) -Wall -Werror $(CXXDEFS) -g -rdynamic
-LDLIBS = -lm
+CDEFS = -DDEFAULT_LONGITUDE=$(DEFAULT_LONGITUDE) -DDEFAULT_LATITUDE=$(DEFAULT_LATITUDE) -DVERSION=$(VERSION) -DPKGNAME=$(PKGNAME) -DAVR_TYPE=$(TARGET_AVR) -DAVR_FREQ=$(TARGET_AVR_FREQ)
 
-exec: $(PKGNAME)
+AVRFLAGS = -mmcu=$(TARGET_AVR) -DF_CPU=$(TARGET_AVR_FREQ)
+CFLAGS = $(CDEFS) -Wall -Werror -Os $(AVRFLAGS) -I$(INCDIR) -std=gnu17
+CXXFLAGS = $(CDEFS) -D__STDC_LIMIT_MACROS -Wall -Werror -Os $(AVRFLAGS) -I$(INCDIR) -std=gnu++17
+LDFLAGS = $(AVRFLAGS) -L$(LIBDIR)
+LDLIBS = 
 
-test: test-rtc test-lcd test-pins
+.PHONY: all
+all: firmware eeprom test
 
-test-rtc: test-rtc.o
-	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+# Build the main firmware image
+.PHONY: firmware
+firmware: $(PKGNAME).hex
 
-test-rtc.o:
-
-test-lcd: test-lcd.o
-
-test-lcd.o:
-
-test-pins: test-pins.o
-
-test-pins.o:
-
-$(PKGNAME): $(PKGNAME).o
-	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
+$(PKGNAME).elf: $(PKGNAME).o
 
 $(PKGNAME).o: $(PKGNAME).C
 
+# Build the eeprom base image
+.PHONY: eeprom
+eeprom: $(PKGNAME)_eeprom.hex
 
+# Build the test firmware images
+.PHONY: test
+test: test-rtc.hex test-lcd.hex test-pins.hex
 
+test-rtc.elf: test-rtc.o
+
+test-rtc.o: test-rtc.C
+
+test-lcd.elf: test-lcd.o
+
+test-lcd.o: test-lcd.C
+
+test-pins.elf: test-pins.o
+
+test-pins.o: test-pins.C
 
 endif 

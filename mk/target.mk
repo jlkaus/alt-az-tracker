@@ -2,7 +2,7 @@
 
 include $(CURDIR)/../mk/variables.mk
 
-OBJDIR := $(CURDIR)/../gen/exec/$(TARGET_ARCH_TYPE)
+OBJDIR := $(CURDIR)/../gen/firmware/$(TARGET_AVR)
 SRCDIR := $(CURDIR)
 
 $(warning ROOTDIR=$(ROOTDIR))
@@ -24,18 +24,22 @@ Makefile : ;
 
 % :: $(OBJDIR) ; :
 
-.PHONY: clean clean-gen mostlyclean distclean clean-distgen clean-source
+.PHONY: mostlyclean
+mostlyclean: clean-gen
 
+.PHONY: clean
 clean: clean-gen
 
-mostlyclean: clean-distgen
-
+.PHONY: distclean
 distclean: clean-distgen clean-source
 
+.PHONY: clean-gen
 clean-gen:
 	$(RM) -r $(OBJDIR)/
 
+.PHONY: clean-distgen
 clean-distgen:
-	$(RM) -r $(CURDIR)/../gen/exec/
+	$(RM) -r $(CURDIR)/../gen/firmware/
 
+.PHONY: clean-source
 clean-source: ;
