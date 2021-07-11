@@ -5,7 +5,7 @@ else
 include $(ROOTDIR)/mk/variables.mk
 include $(ROOTDIR)/mk/rules.mk
 
-INCDIR := $(ROOTDIR)/include
+INCDIR := .
 LIBDIR := .
 
 $(warning ROOTDIR=$(ROOTDIR))
@@ -18,12 +18,11 @@ $(warning MAKECMDGOALS=$(MAKECMDGOALS))
 
 VPATH = $(SRCDIR)
 
-CDEFS = -DDEFAULT_LONGITUDE=$(DEFAULT_LONGITUDE) -DDEFAULT_LATITUDE=$(DEFAULT_LATITUDE) -DVERSION=$(VERSION) -DPKGNAME=$(PKGNAME) -DAVR_TYPE=$(TARGET_AVR) -DAVR_FREQ=$(TARGET_AVR_FREQ)
+CDEFS = -DDEFAULT_LONGITUDE=$(DEFAULT_LONGITUDE) -DDEFAULT_LATITUDE=$(DEFAULT_LATITUDE) -DVERSION=$(VERSION) -DPKGNAME=$(PKGNAME) -DAVR_TYPE=$(TARGET_AVR) -DF_CPU=$(TARGET_AVR_FREQ)
 
-AVRFLAGS = -mmcu=$(TARGET_AVR) -DF_CPU=$(TARGET_AVR_FREQ)
-CFLAGS = $(CDEFS) -Wall -Werror -Os $(AVRFLAGS) -I$(INCDIR) -std=gnu17
-CXXFLAGS = $(CDEFS) -D__STDC_LIMIT_MACROS -Wall -Werror -Os $(AVRFLAGS) -I$(INCDIR) -std=gnu++17
-LDFLAGS = $(AVRFLAGS) -L$(LIBDIR)
+CFLAGS = $(CDEFS) -Wall -Werror -Os -mmcu=$(TARGET_AVR) -I$(INCDIR) -std=gnu17
+CXXFLAGS = $(CDEFS) -D__STDC_LIMIT_MACROS -Wall -Werror -Os -mmcu=$(TARGET_AVR) -I$(INCDIR) -std=gnu++17
+LDFLAGS = -mmcu=$(TARGET_AVR) -L$(LIBDIR)
 LDLIBS = 
 
 .PHONY: all
@@ -33,9 +32,9 @@ all: firmware eeprom test
 .PHONY: firmware
 firmware: $(PKGNAME).hex
 
-$(PKGNAME).elf: $(PKGNAME).o
+$(PKGNAME).elf: $(PKGNAME).o lcd2004.o ds3231.o serial.o config.o quadrature.o
 
-$(PKGNAME).o: $(PKGNAME).C
+$(PKGNAME).o: $(PKGNAME).c lcd2004.h ds3231.h serial.h quadrature.h pins.h config.h
 
 # Build the eeprom base image
 .PHONY: eeprom
@@ -45,16 +44,16 @@ eeprom: $(PKGNAME)_eeprom.hex
 .PHONY: test
 test: test-rtc.hex test-lcd.hex test-pins.hex
 
-test-rtc.elf: test-rtc.o
+test-rtc.elf: test-rtc.o ds3231.o serial.o
 
-test-rtc.o: test-rtc.C
+test-rtc.o: test-rtc.c ds3231.h serial.h pins.h
 
-test-lcd.elf: test-lcd.o
+test-lcd.elf: test-lcd.o lcd2004.o serial.o
 
-test-lcd.o: test-lcd.C
+test-lcd.o: test-lcd.c lcd2004.h serial.h pins.h
 
-test-pins.elf: test-pins.o
+test-pins.elf: test-pins.o serial.o quadrature.o
 
-test-pins.o: test-pins.C
+test-pins.o: test-pins.c serial.h quadrature.h pins.h
 
 endif 
