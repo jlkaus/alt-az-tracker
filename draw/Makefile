@@ -13,6 +13,9 @@ $(warning MAKECMDGOALS=$(MAKECMDGOALS))
 
 VPATH = $(SRCDIR)
 
+GENFLAGS = -m 6.25 #-p
+PDFFLAGS = -f pdf -d 72 -p 72 -b white
+
 .PHONY: all
 all: test #linear circular
 
@@ -20,21 +23,21 @@ all: test #linear circular
 test: test_01.pdf
 
 test_%.svg: test_%.cfg
-	$(SRCDIR)/gen-test-pattern.pl $< > $@
+	$(SRCDIR)/gen-test-pattern.pl $(GENFLAGS) $< -o $@
 
 %.pdf: %.svg
-	$(RSVGCONVERT) -d 72 -p 72 -w 765 -h 990 -f pdf -a -b white $< -o $@
+	$(RSVGCONVERT) $(PDFFLAGS) $< -o $@
 
 .PHONY: linear
 linear: linear_01.pdf
 
 linear_%.svg: linear_%.cfg
-	$(SRCDIR)/gen-linear-quad-pattern.pl $< > $@
+	$(SRCDIR)/gen-linear-quad-pattern.pl $(GENFLAGS) $< -o $@
 
 .PHONY: circular
 circular: circular_01.pdf
 
 circular_%.svg: circular_%.cfg
-	$(SRCDIR)/gen-circular-quad-pattern.pl $< > $@
+	$(SRCDIR)/gen-circular-quad-pattern.pl $(GENFLAGS) $< -o $@
 
 endif
