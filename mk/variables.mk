@@ -30,6 +30,7 @@ INSTALL = /usr/bin/install
 WGET = /usr/bin/wget
 WGET_OPT = --quiet --compression=auto
 CONVERT = /usr/bin/convert
+RSVGCONVERT = /usr/bin/rsvg-convert
 FIND = /usr/bin/find
 CP = /usr/bin/cp
 CHMOD = /usr/bin/chmod

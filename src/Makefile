@@ -5,8 +5,8 @@ else
 include $(ROOTDIR)/mk/variables.mk
 include $(ROOTDIR)/mk/rules.mk
 
-INCDIR := .
-LIBDIR := .
+INCDIR := $(ROOTDIR)/src
+LIBDIR := $(CURDIR)
 
 $(warning ROOTDIR=$(ROOTDIR))
 $(warning CURDIR=$(CURDIR))

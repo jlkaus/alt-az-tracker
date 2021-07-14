@@ -2,7 +2,7 @@
 
 include $(CURDIR)/../mk/variables.mk
 
-OBJDIR := $(CURDIR)/../gen/firmware/$(TARGET_AVR)
+OBJDIR := $(CURDIR)/../gen/$(CLASS)
 SRCDIR := $(CURDIR)
 
 $(warning ROOTDIR=$(ROOTDIR))
@@ -39,7 +39,7 @@ clean-gen:
 
 .PHONY: clean-distgen
 clean-distgen:
-	-$(RM) -r $(CURDIR)/../gen/firmware/
+	-$(RM) -r $(CURDIR)/../gen/$(CLASS)/
 
 .PHONY: clean-source
 clean-source: ;
