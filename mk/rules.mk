@@ -1,6 +1,6 @@
 # implicit rules
 %.elf: %.o
-	$(CC) $(LDFLAGS) -o $@ $< $(LOADLIBES) $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS)
 %.o: %.c
 	$(CC) -c $(CFLAGS) -g -o $@ $<
 %.o: %.C

@@ -1,3 +1,6 @@
+#ifndef _CONFIG_H
+#define _CONFIG_H
+
 // Define the layout and constants of our eeprom config data.
 // eeprom layout version
 // chosen position latitude and longitude
@@ -8,3 +11,5 @@
 // physical telescope origin offsets from detected ones
 
 // maybe include a set of config defaults that could be restored on-device?
+
+#endif

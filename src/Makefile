@@ -42,7 +42,7 @@ eeprom: $(PKGNAME)_eeprom.hex
 
 # Build the test firmware images
 .PHONY: test
-test: test-rtc.hex test-lcd.hex test-pins.hex
+test: test-rtc.hex test-lcd.hex test-pins.hex test-basic.hex
 
 test-rtc.elf: test-rtc.o ds3231.o serial.o
 
@@ -56,4 +56,8 @@ test-pins.elf: test-pins.o serial.o quadrature.o
 
 test-pins.o: test-pins.c serial.h quadrature.h pins.h
 
-endif 
+test-basic.elf: test-basic.o serial.o helper.o
+
+test-basic.o: test-basic.c serial.h helper.h pins.h
+
+endif

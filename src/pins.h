@@ -1,3 +1,6 @@
+#ifndef _PINS_H
+#define _PINS_H
+
 // Define the pins used for our project.
 // For the alt-az-tracker project, there is, at least:
 
@@ -16,3 +19,19 @@
 // indicator LED pin
 // serial port for console and control
 
+#define UART_DDR DDRD
+#define UART_PORT PORTD
+#define UART_PIN PIND
+#define UART_RX_BIT PIND0
+#define UART_TX_BIT PIND1
+
+#define LED_DDR DDRB
+#define LED_PORT PORTB
+#define LED_PIN PINB
+#define LED_BIT PINB0
+
+#define CFG_BAUD_RATE 38400
+#define BAUD CFG_BAUD_RATE
+#include <util/setbaud.h>
+
+#endif
