@@ -32,9 +32,9 @@ all: firmware eeprom test
 .PHONY: firmware
 firmware: $(PKGNAME).hex
 
-$(PKGNAME).elf: $(PKGNAME).o lcd2004.o ds3231.o serial.o config.o quadrature.o
+$(PKGNAME).elf: $(PKGNAME).o lcd2004.o ds3231.o serial.o config.o quadrature.o helper.o
 
-$(PKGNAME).o: $(PKGNAME).c lcd2004.h ds3231.h serial.h quadrature.h pins.h config.h
+$(PKGNAME).o: $(PKGNAME).c lcd2004.h ds3231.h serial.h quadrature.h pins.h config.h helper.h
 
 # Build the eeprom base image
 .PHONY: eeprom
@@ -44,17 +44,17 @@ eeprom: $(PKGNAME)_eeprom.hex
 .PHONY: test
 test: test-rtc.hex test-lcd.hex test-pins.hex test-basic.hex
 
-test-rtc.elf: test-rtc.o ds3231.o serial.o
+test-rtc.elf: test-rtc.o ds3231.o serial.o helper.o
 
-test-rtc.o: test-rtc.c ds3231.h serial.h pins.h
+test-rtc.o: test-rtc.c ds3231.h serial.h pins.h helper.h
 
-test-lcd.elf: test-lcd.o lcd2004.o serial.o
+test-lcd.elf: test-lcd.o lcd2004.o serial.o helper.o
 
-test-lcd.o: test-lcd.c lcd2004.h serial.h pins.h
+test-lcd.o: test-lcd.c lcd2004.h serial.h pins.h helper.h
 
-test-pins.elf: test-pins.o serial.o quadrature.o
+test-pins.elf: test-pins.o serial.o quadrature.o helper.o
 
-test-pins.o: test-pins.c serial.h quadrature.h pins.h
+test-pins.o: test-pins.c serial.h quadrature.h pins.h helper.h
 
 test-basic.elf: test-basic.o serial.o helper.o
 

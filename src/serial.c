@@ -23,12 +23,12 @@ void serial_init() {
 
 }
 
-uint8_t getch() {
+char serial_getch() {
   while(!(UCSR0A & _BV(RXC0)));
   return UDR0;
 }
 
-uint8_t getch_async() {
+char serial_getch_async() {
   if(UCSR0A & _BV(RXC0)) {
     return UDR0;
   } else {
@@ -36,15 +36,15 @@ uint8_t getch_async() {
   }
 }
 
-void putch(uint8_t ch) {
+void serial_putch(char ch) {
   while(!(UCSR0A & _BV(UDRE0)));
   UDR0 = ch;
 }
 
-int16_t write(const void *buf, uint16_t count) {
+int16_t serial_write(const char *buf, uint16_t count) {
   uint16_t i = 0;
   for(; i < count; ++i) {
-    putch(((uint8_t *)buf)[i]);
+    serial_putch(buf[i]);
   }
   return (int16_t)i;
 }

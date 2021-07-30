@@ -6,15 +6,15 @@
 void serial_init();
 
 //    try-receive a byte
-uint8_t getch_async();
+char serial_getch_async();
 
 //    wait-receive bytes
-uint8_t getch();
+char serial_getch();
 
 //    send a byte
-void putch(uint8_t);
+void serial_putch(char);
 
 //    send bytes
-int16_t write(const void *buf, uint16_t count);
+int16_t serial_write(const char *buf, uint16_t count);
 
 #endif

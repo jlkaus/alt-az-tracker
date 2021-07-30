@@ -31,17 +31,17 @@ int main() {
   serial_init();
   flash_led(2);
 
-  write(fw_bootstring, sizeof(fw_bootstring));
-  write(fw_datestring, sizeof(fw_datestring));
+  serial_write(fw_bootstring, sizeof(fw_bootstring));
+  serial_write(fw_datestring, sizeof(fw_datestring));
 
   flash_led(3);
   for(;;) {
-    uint8_t c = getch_async();
+    uint8_t c = serial_getch_async();
     if(c != 0x00) {
       flash_led(1);
       // case convert character and repeat it back out
       c ^= 0x20;
-      putch(c);
+      serial_putch(c);
 
       if(c == 'Q') {
         src_hang(9);
