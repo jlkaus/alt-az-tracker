@@ -70,6 +70,7 @@
 // This works if the prescalar is 1.  If it needs to be higher, you'd divide this number by 4 for each increase in prescalar
 // for F_CPU of 20MHz, prescalar can be 1 all the way down to about a TWI clock speed of 40kHz or so, then you'd need to up
 // the prescalar...
+// Also, remeber to turn on the pull up resistors for SDA and SCL.  Should be roughly fine...
 #define TWBR_VALUE  (((( (F_CPU) / (CFG_TWI_SCK) ) - 16 ) / 2 ))
 
 #endif

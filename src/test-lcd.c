@@ -33,16 +33,23 @@ int main() {
   serial_write(fw_datestring, sizeof(fw_datestring));
 
   lcd_enable();
-  lcd_putch('H');
-  lcd_putch('i');
-  lcd_putch('!');
-
+  lcd_move_to(0,0);
+  lcd_write("2021-07-30 23:29:58 ", 20);
+  lcd_move_to(1,0);
+  lcd_write(" 44.036\xdf  -90.142\xdf  ", 20);
+  lcd_move_to(2,0);
+  lcd_write(" 45.000\xdf -172.000\xdf  ", 20);
+  lcd_move_to(3,0);
+  lcd_write("  1.230\xdf 22.24  3.13", 20);
+  lcd_move_to(0,0);
+  
   flash_led(4);
   for(;;) {
     uint8_t c = serial_getch_async();
     if(c != 0x00) {
       flash_led(1);
       // case convert character and repeat it back out
+      lcd_putch(c);
       c ^= 0x20;
       serial_putch(c);
 
