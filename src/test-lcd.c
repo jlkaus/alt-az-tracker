@@ -34,7 +34,7 @@ int main() {
 
   lcd_enable();
   lcd_move_to(0,0);
-  lcd_write("2021-07-30 23:29:58 ", 20);
+  lcd_write("2021-07-30 23:29:58Z", 20);
   lcd_move_to(1,0);
   lcd_write(" 44.036\xdf  -90.142\xdf  ", 20);
   lcd_move_to(2,0);

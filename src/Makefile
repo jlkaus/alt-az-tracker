@@ -32,21 +32,21 @@ all: firmware eeprom test
 .PHONY: firmware
 firmware: $(PKGNAME).hex
 
-$(PKGNAME).elf: $(PKGNAME).o lcd2004.o ds3231.o serial.o config.o quadrature.o helper.o
+$(PKGNAME).elf: $(PKGNAME).o lcd2004.o ds3231.o serial.o config.o quadrature.o helper.o twi_master.o
 
-$(PKGNAME).o: $(PKGNAME).c lcd2004.h ds3231.h serial.h quadrature.h pins.h config.h helper.h
+$(PKGNAME).o: $(PKGNAME).c lcd2004.h ds3231.h serial.h quadrature.h pins.h config.h helper.h twi_master.h
 
 # Build the eeprom base image
 .PHONY: eeprom
-eeprom: $(PKGNAME)_eeprom.hex
+eeprom: $(PKGNAME)_eeprom.hex bulletinA.txt
 
 # Build the test firmware images
 .PHONY: test
 test: test-rtc.hex test-lcd.hex test-pins.hex test-basic.hex
 
-test-rtc.elf: test-rtc.o ds3231.o serial.o helper.o
+test-rtc.elf: test-rtc.o ds3231.o serial.o helper.o twi_master.o
 
-test-rtc.o: test-rtc.c ds3231.h serial.h pins.h helper.h
+test-rtc.o: test-rtc.c ds3231.h serial.h pins.h helper.h twi_master.h
 
 test-lcd.elf: test-lcd.o lcd2004.o serial.o helper.o
 
@@ -59,5 +59,12 @@ test-pins.o: test-pins.c serial.h quadrature.h pins.h helper.h
 test-basic.elf: test-basic.o serial.o helper.o
 
 test-basic.o: test-basic.c serial.h helper.h pins.h
+
+# Fetch the latest IERS Bulletin A data
+bulletinA.txt: FORCE_DOWNLOAD_CHECK
+	$(WGET) https://datacenter.iers.org/data/latestVersion/bulletinA.txt -N
+
+.PHONY: FORCE_DOWNLOAD_CHECK
+FORCE_DOWNLOAD_CHECK:
 
 endif
